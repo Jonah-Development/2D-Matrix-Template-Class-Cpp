@@ -1,20 +1,3 @@
-/*
-    Matrix2D, a 2D matrix template class with many fast matrix operations
-    Copyright (C) 2022 Jonah Kable
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
-    files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
-    modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-    is furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
-    IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 #pragma once
 
 #include <vector>
@@ -22,7 +5,6 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
-//#include <algorithm>
 #include <cmath>
 #include <string>
 #include <sstream>
@@ -38,13 +20,17 @@
 #define _MATRIX_INLINE_TMP
 #endif
 
-#if defined(__GNU__)
+#if defined(__GNUC__)
 #define __forceinline __attribute__((always_inline))
 #endif // defined(__GNU__)
 
 
 #ifdef _MATRIX_USE_FORCED_INLINES
+#ifdef _WIN32
 #define _INLINE __forceinline
+#else
+#define _INLINE __attribute__((always_inline))
+#endif
 #elif defined(_MATRIX_DISABLE_INLINE)
 #define _INLINE
 #else 
@@ -114,7 +100,7 @@ namespace Matrix
         void cout(void);
 
         template <typename element, size_t rows, size_t columns>
-        static void Print(Matrix2D<element, rows, columns>& mat);
+        void Print(Matrix2D<element, rows, columns>& mat);
 
         //
         // All functions needed to perform all kinds of matrix math stuff
@@ -411,7 +397,7 @@ void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator *= (Matrix2D<_Elm2, _Rows2,
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
 template<typename T, size_t rows, size_t columns>
-static void Matrix::Matrix2D<_Elem, _Rows, _Cols>::Print(Matrix2D<T, rows, columns>& mat)
+void Matrix::Matrix2D<_Elem, _Rows, _Cols>::Print(Matrix2D<T, rows, columns>& mat)
 {
     mat.cout();
 }
