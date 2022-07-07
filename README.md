@@ -6,7 +6,7 @@ This project has arisen on a boring day that I had to spend sick at home. The go
 
 However, since I felt quite an enjoyment when I started overengineering this class by introducing increasingly more templates, my plan changed: now I wanted to make the most overengineering project I had done for a while.
 
-If you discover a bug, please check if your headers are up-to-date. In case they are, you can submit a bug in the [known bugs file](BUGS.md). Please first check if the bug is already known.
+If you discover a bug, please check if your headers are up-to-date. In case they are, you can submit a bug in the [issues](/issues/) tab. Please first check if the bug is already known.
 
 ## Class-Operators Overview
 You can use the following operators with the class itself:
