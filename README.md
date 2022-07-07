@@ -105,13 +105,16 @@ int main()
 #define _MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N 3
 #include "Matrix_Combined.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 using namespace Matrix;
 
 int main()
 {
     // Assigning a constant value will set all values of 
     // the matrix to the provided value:
-    Matrix2D<double, 3, 8> allPi = 3.141592658979323;
+    Matrix2D<double, 3, 8> allPi = M_PI;
 
     // You can also use an initializer list to specifically  
     // set each value of the
