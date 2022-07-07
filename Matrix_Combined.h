@@ -663,7 +663,7 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
 
     // Full amount of functions for Release mode
 #if defined(_MATRIX_MANUAL_OPTIMISATION) && defined(NDEBUG) && (_MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N > 4)
-#pragma message  ( "Compiling Matrix2D unrolled multiplication function for up to 5x5" )
+//#pragma message  ( "Compiling Matrix2D unrolled multiplication function for up to 5x5" )
     // using multiple if-statements to detect common Matrix sizes. The compiler will optimize all
     // necessary if-statements for each matrix type away, since the arguments are known at compile time.
 
@@ -3087,7 +3087,7 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
         return;
     }
 #elif defined(_MATRIX_MANUAL_OPTIMISATION) && defined(NDEBUG) && (_MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N > 3)
-#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 4x4")
+//#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 4x4")
     if (true)
     {
         // 1x1 * 1x1 -> 1x1
@@ -4148,7 +4148,7 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
     }
 
 #elif (defined(_MATRIX_MANUAL_OPTIMISATION) && !defined(NDEBUG)) or (defined(_MATRIX_MANUAL_OPTIMISATION) && defined(NDEBUG) && (_MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N > 2)) 
-#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 3x3")
+//#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 3x3")
     // Smaller amount of functions for Debug Mode or explicit release mode
 
     // 1x1 * 1xn
@@ -4546,8 +4546,6 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
                 C.at(rows, cols) = _ElemC((A.at(rows, 0) * B.at(0, cols)) + (A.at(rows, 1) * B.at(1, cols)) + (A.at(rows, 2) * B.at(2, cols)));
         return;
     }
-
-
 
 #endif // _MATRIX_MANUAL_OPTIMISATION
 
