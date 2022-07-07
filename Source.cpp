@@ -2,7 +2,6 @@
 #define _MATRIX_USE_FORCED_INLINES
 #define _MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N 3
 #include "Matrix_Combined.h"
-#include <iostream>
 
 using namespace Matrix;
 
@@ -19,7 +18,6 @@ int main()
         { 2,  3,  5,  7, 11, 13},
         {17, 19, 23, 29, 31, 37},
     };
-
 
     // You can also assign a matrix to another matrix. They
     // need to have the same dimensions:
