@@ -1,10 +1,10 @@
-# 2D-Matrix-Template-Class-C++
+# 2D Matrix Template Class C++
 A 2D matrix template class with many fast matrix operations.
 
 ## Preface
 This project has arisen on a boring day that I had to spend sick at home. The goal was to create a simple matrix class that could do basic matrix operations.
 
-However, since I felt quite an enjoyment when I started overengineering this class by introducing increasingly more templates, my plan changed: now I wanted to make the most overengineering project I had done for a while. If you feel like there is any functionality missing for the matrix class for accompanying functions, you may add a suggestion in the [suggestions file](SUGGESTIONS.md).
+However, since I felt quite an enjoyment when I started overengineering this class by introducing increasingly more templates, my plan changed: now I wanted to make the most overengineering project I had done for a while.
 
 If you discover a bug, please check if your headers are up-to-date. In case they are, you can submit a bug in the [known bugs file](BUGS.md). Please first check if the bug is already known.
 
