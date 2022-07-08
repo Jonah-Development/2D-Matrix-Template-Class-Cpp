@@ -49,26 +49,28 @@ namespace Matrix
     {
     public:
         Matrix2D(void) = delete;
+        Matrix2D(_Elem*);
         template <typename _ElemB> Matrix2D(const _ElemB);
         Matrix2D(const Matrix2D&);
         template <typename _ElemB> Matrix2D(Matrix2D<_ElemB, _Rows, _Cols>&);
         Matrix2D(const std::initializer_list<std::initializer_list<_Elem>>);
-        Matrix2D(_Elem*);
         ~Matrix2D(void);
 
         Matrix2D& operator = (const Matrix2D&);
         Matrix2D& operator = (_Elem*);
         Matrix2D& operator = (const _Elem);
-        _Elem* operator + (Matrix2D&);
-        _Elem* operator - (Matrix2D&);
+        template <typename _ElemB> _ElemB* operator + (Matrix2D<_ElemB, _Rows, _Cols>&);
+        template <typename _ElemB> _ElemB* operator - (Matrix2D<_ElemB, _Rows, _Cols>&);
         _Elem* operator * (Matrix2D&) = delete; // unable to ensure that both matrices have the correct size. Please use Matrix::Mul()
         _Elem* operator / (Matrix2D&) = delete;
         _Elem* operator % (Matrix2D&) = delete;
         _Elem* operator << (Matrix2D&) = delete;
         _Elem* operator >> (Matrix2D&) = delete;
 
-        void operator += (Matrix2D&);
-        void operator -= (Matrix2D&);
+        template <typename _ElemB> void operator += (Matrix2D<_ElemB, _Rows, _Cols>&);
+        template <typename _ElemB> void operator += (const _ElemB);
+        template <typename _ElemB> void operator -= (Matrix2D<_ElemB, _Rows, _Cols>&);
+        template <typename _ElemB> void operator -= (const _ElemB);
         template <typename _Elm2, size_t _Rows2, size_t _Cols2>
         void operator *= (Matrix2D<_Elm2, _Rows2, _Cols2>&);
         bool operator == (Matrix2D&);
@@ -96,8 +98,8 @@ namespace Matrix
         _INLINE _Elem& at(const size_t index) { return p_mat[index]; }
         _INLINE _Elem& at(const size_t row, const size_t column) { return p_mat[POS_XY(row, column)]; }
 
-        template<typename _Cast = _Elem>
-        void cout(void);
+        template<typename _Cast = _Elem> void cout(void);
+        void clear(void);
 
         template <typename element, size_t rows, size_t columns>
         void Print(Matrix2D<element, rows, columns>& mat);
@@ -384,6 +386,12 @@ void Matrix::Matrix2D<_Elem, _Rows, _Cols>::cout(void)
 }
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
+void Matrix::Matrix2D<_Elem, _Rows, _Cols>::clear(void)
+{
+    memset(p_mat, 0, _Rows * _Cols * sizeof(_Elem));
+}
+
+template<typename _Elem, size_t _Rows, size_t _Cols>
 template<typename _Elm2, size_t _Rows2, size_t _Cols2>
 void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator *= (Matrix2D<_Elm2, _Rows2, _Cols2>& _mat2)
 {
@@ -420,7 +428,7 @@ Matrix::Matrix2D<_Elem, _Rows, _Cols>& Matrix::Matrix2D<_Elem, _Rows, _Cols>::op
 template<typename _Elem, size_t _Rows, size_t _Cols>
 Matrix::Matrix2D<_Elem, _Rows, _Cols>& Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator = (_Elem* ptr)
 {
-    if (p_mat) delete[] ptr;
+    if (p_mat) delete[] p_mat;
     p_mat = ptr;
     return *this;
 }
@@ -434,45 +442,65 @@ Matrix::Matrix2D<_Elem, _Rows, _Cols>& Matrix::Matrix2D<_Elem, _Rows, _Cols>::op
 }
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
-_Elem* Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator + (Matrix2D& _mat2)
+template <typename _ElemB>
+_ElemB* Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator + (Matrix2D<_ElemB, _Rows, _Cols>& _mat2)
 {
-    _Elem* tmp = new _Elem[_Cols * _Rows];
+    _ElemB* tmp = new _ElemB[_Cols * _Rows];
 
     for (size_t i = 0; i < (_Cols * _Rows); i++)
-        tmp[i] = this->at(i) + _mat2[i];
+        tmp[i] = _ElemB(p_mat[i] + _mat2[i]);
 
     return tmp;
 }
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
-_Elem* Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator - (Matrix2D& _mat2)
+template <typename _ElemB>
+_ElemB* Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator - (Matrix2D<_ElemB, _Rows, _Cols>& _mat2)
 {
-    _Elem* tmp = new _Elem[_Cols * _Rows];
+    _ElemB* tmp = new _ElemB[_Cols * _Rows];
 
     for (size_t i = 0; i < (_Cols * _Rows); i++)
-        tmp[i] = this->at(i) - _mat2[i];
+        tmp[i] = _ElemB(p_mat[i] - _mat2[i]);
 
     return tmp;
 }
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
-void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator += (Matrix2D& _mat2)
+template<typename _ElemB>
+void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator += (Matrix2D<_ElemB, _Rows, _Cols>& _mat2)
 {
     for (size_t i = 0; i < (_Cols * _Rows); i++)
-        p_mat[i] += _mat2[i];
+        p_mat[i] += _Elem(_mat2[i]);
 }
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
-void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator -= (Matrix2D& _mat2)
+template<typename _ElemB>
+void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator += (const _ElemB scalar)
 {
     for (size_t i = 0; i < (_Cols * _Rows); i++)
-        p_mat[i] -= _mat2[i];
+        p_mat[i] += _Elem(scalar);
+}
+
+template<typename _Elem, size_t _Rows, size_t _Cols>
+template<typename _ElemB>
+void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator -= (Matrix2D<_ElemB, _Rows, _Cols>& _mat2)
+{
+    for (size_t i = 0; i < (_Cols * _Rows); i++)
+        p_mat[i] -= _Elem(_mat2[i]);
+}
+
+template<typename _Elem, size_t _Rows, size_t _Cols>
+template<typename _ElemB>
+void Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator-=(const _ElemB  scalar)
+{
+    for (size_t i = 0; i < (_Cols * _Rows); i++)
+        p_mat[i] -= _Elem(scalar);
 }
 
 template<typename _Elem, size_t _Rows, size_t _Cols>
 bool Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator == (Matrix2D& _mat2)
 {
-    if (!SameDimensions(_mat2)) return false;
+    //if (!SameDimensions(_mat2)) return false;
 
     return (memcmp(p_mat, _mat2.p_mat, _Cols * _Rows * sizeof(_Elem)) == 0);
 }
@@ -480,7 +508,7 @@ bool Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator == (Matrix2D& _mat2)
 template<typename _Elem, size_t _Rows, size_t _Cols>
 bool Matrix::Matrix2D<_Elem, _Rows, _Cols>::operator != (Matrix2D& _mat2)
 {
-    if (!SameDimensions(_mat2)) return true;
+    //if (!SameDimensions(_mat2)) return true;
 
     return (bool)(memcmp(p_mat, _mat2.p_mat, _Cols * _Rows * sizeof(_Elem)));
 }
@@ -663,7 +691,7 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
 
     // Full amount of functions for Release mode
 #if defined(_MATRIX_MANUAL_OPTIMISATION) && defined(NDEBUG) && (_MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N > 4)
-//#pragma message  ( "Compiling Matrix2D unrolled multiplication function for up to 5x5" )
+#pragma message  ( "Compiling Matrix2D unrolled multiplication function for up to 5x5" )
     // using multiple if-statements to detect common Matrix sizes. The compiler will optimize all
     // necessary if-statements for each matrix type away, since the arguments are known at compile time.
 
@@ -3087,7 +3115,7 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
         return;
     }
 #elif defined(_MATRIX_MANUAL_OPTIMISATION) && defined(NDEBUG) && (_MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N > 3)
-//#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 4x4")
+#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 4x4")
     if (true)
     {
         // 1x1 * 1x1 -> 1x1
@@ -4148,7 +4176,7 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
     }
 
 #elif (defined(_MATRIX_MANUAL_OPTIMISATION) && !defined(NDEBUG)) or (defined(_MATRIX_MANUAL_OPTIMISATION) && defined(NDEBUG) && (_MATRIX_LIMIT_MANUAL_OPTIMISATION_TO_N > 2)) 
-//#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 3x3")
+#pragma message ("Compiling Matrix2D unrolled multiplication function for up to 3x3")
     // Smaller amount of functions for Debug Mode or explicit release mode
 
     // 1x1 * 1xn
@@ -4546,6 +4574,8 @@ void Matrix::Mul(Matrix2D<_ElemA, _RowsA, _ColsA>& A, Matrix2D<_ElemB, _ColsA, _
                 C.at(rows, cols) = _ElemC((A.at(rows, 0) * B.at(0, cols)) + (A.at(rows, 1) * B.at(1, cols)) + (A.at(rows, 2) * B.at(2, cols)));
         return;
     }
+
+
 
 #endif // _MATRIX_MANUAL_OPTIMISATION
 
